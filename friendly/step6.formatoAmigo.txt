@@ -1,0 +1,14 @@
+0 0 [A-Z0] = 1
+
+0 1 vowel =
+
+1 2 H H
+2 0 vowel =
+
+1 3 H eps
+3 0 consonant =
+3 0 eps eps
+
+#### falta coisas
+
+0
