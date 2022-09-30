@@ -1,5 +1,6 @@
 0 0 [A-Z0] = 1
 
+
 0 1 vowel =
 
 1 2 H H
@@ -9,6 +10,23 @@
 3 0 consonant =
 3 0 eps eps
 
-#### falta coisas
+
+0 4 C eps
+4 0 K K
+
+
+0 5 P eps
+5 0 H F
+
+
+0 0 Q K
+
+
+0 6 S X
+6 0 H H
+
+6 7 I I
+7 0 [AO] =
+
 
 0
