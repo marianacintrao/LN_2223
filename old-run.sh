@@ -4,8 +4,8 @@ mkdir -p compiled images
 
 # ############ Convert friendly and compile to openfst ############
 for i in friendly/*.txt; do
-    echo "Converting friendly: $i"
-    python3 compact2fst.py  $i  > sources/$(basename $i ".formatoAmigo.txt").txt
+	echo "Converting friendly: $i"
+   python3 compact2fst.py  $i  > sources/$(basename $i ".formatoAmigo.txt").txt
 done
 
 
@@ -24,29 +24,27 @@ done
 
 # ############ CORE OF THE PROJECT  ############
 
-# #### COMPOSING FSTs ####
 
-cp compiled/step1.fst compiled/allsteps.fst
-for step in {2..9}; do
-    echo $step
-    fstcompose compiled/allsteps.fst compiled/step$step.fst compiled/allsteps.fst
-done
+
+
+
+
 
 
 # ############ generate PDFs  ############
 echo "Starting to generate PDFs"
-for i in compiled/*.fst; do
+for i in compiled/step*.fst; do
 	echo "Creating image: images/$(basename $i '.fst').pdf"
-    fstdraw --portrait --isymbols=syms.txt --osymbols=syms.txt $i | dot -Tpdf > images/$(basename $i '.fst').pdf
+   fstdraw --portrait --isymbols=syms.txt --osymbols=syms.txt $i | dot -Tpdf > images/$(basename $i '.fst').pdf
 done
 
 
 
 # ############ tests  ############
 
-echo "Testing"
+echo "Testing ABCDE"
 
-for w in compiled/t-*.fst; do
-    fstcompose $w compiled/allsteps.fst | fstshortestpath | fstproject --project_type=output |
-    fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
-done
+
+fstcompose compiled/t-word1.fst compiled/step7.fst | fstshortestpath | fstproject --project_type=output |
+fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
+

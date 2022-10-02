@@ -52,17 +52,10 @@
 1	1	Y	Y	1
 1	1	Z	Z	1
 1	1	0	0	1
-0	1	G	eps
-0	1	K	eps
-0	1	P	eps
-1	1	N	N
-0	2	A	eps
-2	1	E	E
-0	3	W	eps
-3	1	R	R
-0	4	M	M
-1	4	M	M
-4	5	B	eps
+1	1	A	eps
+1	1	E	eps
+1	1	I	eps
+1	1	O	eps
+1	1	U	eps
 0
 1
-5

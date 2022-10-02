@@ -32,14 +32,9 @@ for step in {2..9}; do
     fstcompose compiled/allsteps.fst compiled/step$step.fst compiled/allsteps.fst
 done
 
+# #### CREATING INVERSION ####
 
-# ############ generate PDFs  ############
-echo "Starting to generate PDFs"
-for i in compiled/*.fst; do
-	echo "Creating image: images/$(basename $i '.fst').pdf"
-    fstdraw --portrait --isymbols=syms.txt --osymbols=syms.txt $i | dot -Tpdf > images/$(basename $i '.fst').pdf
-done
-
+fstinvert compiled/allsteps.fst compiled/allsteps-invert.fst
 
 
 # ############ tests  ############

@@ -59,4 +59,14 @@
 3	0	Y	Y
 3	0	Z	Z
 3	0	eps	eps
+0	4	C	eps
+4	0	K	K
+0	5	P	eps
+5	0	H	F
+0	0	Q	K
+0	6	S	X
+6	0	H	H
+6	7	I	I
+7	0	A	A
+7	0	O	O
 0
