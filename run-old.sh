@@ -45,6 +45,6 @@ done
 echo "Testing ABCDE"
 
 
-fstcompose compiled/t-word1.fst compiled/step7.fst | fstshortestpath | fstproject --project_type=output |
+fstcompose compiled/t-word1.fst compiled/step1.fst | fstshortestpath | fstproject --project_type=output |
 fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 
