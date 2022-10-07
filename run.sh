@@ -26,12 +26,15 @@ done
 
 # #### COMPOSING FSTs ####
 
-cp compiled/step1.fst compiled/allsteps.fst
+cp compiled/step1.fst compiled/metaphoneLN.fst
 for step in {2..9}; do
     echo $step
-    fstcompose compiled/allsteps.fst compiled/step$step.fst compiled/allsteps.fst
+    fstcompose compiled/metaphoneLN.fst compiled/step$step.fst compiled/metaphoneLN.fst
 done
 
+# #### CREATING INVERSION ####
+
+fstinvert compiled/metaphoneLN.fst compiled/invertMetaphoneLN.fst
 
 # ############ generate PDFs  ############
 echo "Starting to generate PDFs"
