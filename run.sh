@@ -50,6 +50,6 @@ done
 echo "Testing"
 
 for w in compiled/t-*.fst; do
-    fstcompose $w compiled/allsteps.fst | fstshortestpath | fstproject --project_type=output |
+    fstcompose $w compiled/metaphoneLN.fst | fstshortestpath | fstproject --project_type=output |
     fstrmepsilon | fsttopsort | fstprint --acceptor --isymbols=./syms.txt
 done
