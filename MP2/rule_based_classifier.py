@@ -30,6 +30,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.metrics.distance import jaccard_distance
 from nltk.metrics.distance  import edit_distance
 from nltk.util import ngrams
+from nltk.sentiment import SentimentIntensityAnalyzer
 
 #print(stopwords.words('english'))
 '''
@@ -47,6 +48,20 @@ from nltk.util import ngrams
 "haven't", 'isn', "isn't", 'ma', 'mightn', "mightn't", 'mustn', "mustn't", 'needn', "needn't", 'shan', "shan't", 
 'shouldn', "shouldn't", 'wasn', "wasn't", 'weren', "weren't", 'won', "won't", 'wouldn', "wouldn't"]
 '''
+
+def sentiment(sentence):
+    sia = SentimentIntensityAnalyzer()
+    polarity = sia.polarity_scores(sentence)
+    if polarity['neg'] > 0.9:
+        return "==Poor=="
+    elif polarity['pos'] > 0.9:
+        return "==Excelent=="
+    elif polarity['neu'] > 0.8:
+        return "==Good=="
+    elif polarity['pos'] > polarity['neg']:
+        return "==VeryGood=="
+    else:
+        return "=Unsatisfactory="
 
 # stopwords from NLTK
 stop_words = stopwords.words('english')# my new custom stopwords
@@ -66,10 +81,10 @@ porter = PorterStemmer()
 lancaster = LancasterStemmer()
 lemmatizer = WordNetLemmatizer()
 
-PORTERSTEMMER = True
+PORTERSTEMMER = False
 LANCASTERSTEMMER = False
-LEMMATIZATION = False
-AUTOCORRECT = True
+LEMMATIZATION = True
+AUTOCORRECT = False
 
 correct_words = words.words()
 
@@ -77,16 +92,21 @@ correct_words = words.words()
 # ========================== #
 # Remove Stopwords from Text #
 # ========================== #
-for text in train["data"][:3]:
+for text in train["data"][:6]:
     filtered_list = []
     # Tokenize the sentence
+    print(sentiment(text), text)
     words = word_tokenize(text)
     for word in words:
         if word.lower() not in stop_words:
             
             if AUTOCORRECT:
-                temp = [(edit_distance(word, w),w) for w in correct_words if w[0]==word[0]]                
-                print(sorted(temp, key = lambda val:val[0])[0][1])                
+                # temp = [(edit_distance(word, w),w) for w in correct_words if w[0]==word[0]]                
+                # print(sorted(temp, key = lambda val:val[0])[0][1])  
+                temp = [(jaccard_distance(set(ngrams(word, 2)),
+                              set(ngrams(w, 2))),w)
+                    for w in correct_words if w[0]==word[0]]
+                print(sorted(temp, key = lambda val:val[0])[0][1])              
             if PORTERSTEMMER:
                 word = porter.stem(word)
             elif LANCASTERSTEMMER:
@@ -97,5 +117,4 @@ for text in train["data"][:3]:
             filtered_list.append(word)
             
     print(filtered_list)
-
 
