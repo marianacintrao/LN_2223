@@ -44,3 +44,5 @@ if __name__ == "__main__":
     predicted_data = classify(train["data"], train["target"], train["target_names"], test)
     for text, category in predicted_data:
         print("{0} => {1}".format(text, category))
+
+

@@ -19,6 +19,7 @@ import nltk
 #nltk.download('wordnet')
 #nltk.download('omw-1.4')
 #nltk.download('words')
+#nltk.download('vader_lexicon')
 
 
 from nltk.corpus import words
@@ -55,13 +56,13 @@ def sentiment(sentence):
     if polarity['neg'] > 0.9:
         return "==Poor=="
     elif polarity['pos'] > 0.9:
-        return "==Excelent=="
+        return "==Excellent=="
     elif polarity['neu'] > 0.8:
         return "==Good=="
     elif polarity['pos'] > polarity['neg']:
         return "==VeryGood=="
     else:
-        return "=Unsatisfactory="
+        return "==Unsatisfactory=="
 
 # stopwords from NLTK
 stop_words = stopwords.words('english')# my new custom stopwords
@@ -89,32 +90,39 @@ AUTOCORRECT = False
 correct_words = words.words()
 
 
-# ========================== #
-# Remove Stopwords from Text #
-# ========================== #
-for text in train["data"][:6]:
-    filtered_list = []
-    # Tokenize the sentence
-    print(sentiment(text), text)
-    words = word_tokenize(text)
-    for word in words:
-        if word.lower() not in stop_words:
-            
-            if AUTOCORRECT:
-                # temp = [(edit_distance(word, w),w) for w in correct_words if w[0]==word[0]]                
-                # print(sorted(temp, key = lambda val:val[0])[0][1])  
-                temp = [(jaccard_distance(set(ngrams(word, 2)),
-                              set(ngrams(w, 2))),w)
-                    for w in correct_words if w[0]==word[0]]
-                print(sorted(temp, key = lambda val:val[0])[0][1])              
-            if PORTERSTEMMER:
-                word = porter.stem(word)
-            elif LANCASTERSTEMMER:
-                word = lancaster.stem(word)
-            elif LEMMATIZATION:
-                word = lemmatizer.lemmatize(word)
+def classify(data):
+    classification_list = []
+    for text in data:
+        classification_list.append((text, sentiment(text)))
+    return classification_list
 
-            filtered_list.append(word)
-            
-    print(filtered_list)
+if __name__ == "__main__":
+    # ========================== #
+    # Remove Stopwords from Text #
+    # ========================== #
+    for text in train["data"][:6]:
+        filtered_list = []
+        # Tokenize the sentence
+        print(sentiment(text), text)
+        words = word_tokenize(text)
+        for word in words:
+            if word.lower() not in stop_words:
+                
+                if AUTOCORRECT:
+                    # temp = [(edit_distance(word, w),w) for w in correct_words if w[0]==word[0]]                
+                    # print(sorted(temp, key = lambda val:val[0])[0][1])  
+                    temp = [(jaccard_distance(set(ngrams(word, 2)),
+                                set(ngrams(w, 2))),w)
+                        for w in correct_words if w[0]==word[0]]
+                    print(sorted(temp, key = lambda val:val[0])[0][1])              
+                if PORTERSTEMMER:
+                    word = porter.stem(word)
+                elif LANCASTERSTEMMER:
+                    word = lancaster.stem(word)
+                elif LEMMATIZATION:
+                    word = lemmatizer.lemmatize(word)
+
+                filtered_list.append(word)
+                
+    # print(filtered_list)
 

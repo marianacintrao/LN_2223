@@ -1,16 +1,17 @@
 import pickle
 import naive_bayes_classifier
+import rule_based_classifier
 import json
 
-results = {"naive_bayes": []}
+results = {"naive_bayes": [], "rule_based": []}
 data = []
 target = []
 target_names = [
-    "=Poor=", 
-    "=Unsatisfactory=", 
-    "=Good=", 
-    "=VeryGood=", 
-    "=Excellent="
+    "==Poor==", 
+    "==Unsatisfactory==", 
+    "==Good==", 
+    "==VeryGood==", 
+    "==Excellent=="
     ]
 
 for i in range(10):
@@ -49,16 +50,39 @@ for i in range(10):
             iteration_results["correct"] += 1
 
     results["naive_bayes"].append(iteration_results)
+    ###################
+    # test with rules #
+    ###################
+    predicted_data = rule_based_classifier.classify(test_data)
+
+    iteration_results = {"correct": 0, "incorrect": 0, "incorrect_instances": []}
+    print("Comparing predicted and actual data")
+    for j in range(len(predicted_data)):
+        text, category = predicted_data[j]
+        predicted_category_code = test_target[j]
+        predicted_category = target_names[predicted_category_code]
+        if predicted_category != category:
+            iteration_results["incorrect"] += 1
+            iteration_results["incorrect_instances"].append({
+                "text": text, 
+                "predicted": category, 
+                "actual": predicted_category, 
+                "error_distance": predicted_category_code - target_names.index(category)})
+        else:
+            iteration_results["correct"] += 1
+
+    results["rule_based"].append(iteration_results)
+    
     #####################
     # other tests: TODO #
     #####################
 
-
-print("Printing results to file")
-j = json.dumps(results, indent=4)
-# Writing to results.json
-with open("results.json", "w") as outfile:
-    outfile.write(j)
+    
+    print("Printing results to file")
+    jsondump = json.dumps(results, indent=4)
+    # Writing to results.json
+    with open("results.json", "w") as outfile:
+        outfile.write(jsondump)
 
 
 
