@@ -5,11 +5,11 @@ import pickle
 FILENAMES = ["train.txt"]
 
 target_names = [
-    "=Poor=", 
-    "=Unsatisfactory=", 
-    "=Good=", 
-    "=VeryGood=", 
-    "=Excellent="
+    "==Poor==", 
+    "==Unsatisfactory==", 
+    "==Good==", 
+    "==VeryGood==", 
+    "==Excellent=="
     ]
 
 if __name__ == '__main__':

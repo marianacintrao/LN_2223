@@ -11,17 +11,14 @@ https://www.datacamp.com/tutorial/stemming-lemmatization-python
 https://www.geeksforgeeks.org/correcting-words-using-nltk-in-python/
 
 '''''''''''''''''''''
+from curses.ascii import isalpha
 import pickle
 import nltk
 
-#nltk.download('stopwords')
-#nltk.download('punkt')
-#nltk.download('wordnet')
-#nltk.download('omw-1.4')
-#nltk.download('words')
 #nltk.download('vader_lexicon')
 
-
+from nltk.tokenize import word_tokenize
+from nltk.sentiment import SentimentIntensityAnalyzer
 from nltk.corpus import words
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
@@ -31,24 +28,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.metrics.distance import jaccard_distance
 from nltk.metrics.distance  import edit_distance
 from nltk.util import ngrams
-from nltk.sentiment import SentimentIntensityAnalyzer
 
-#print(stopwords.words('english'))
-'''
-['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', "you're", "you've", "you'll", "you'd", 'your', 
-'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', "she's", 'her', 'hers', 'herself', 'it', 
-"it's", 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 
-'that', "that'll", 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 
-'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 
-'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 
-'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 
-'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 
-'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 
-'will', 'just', 'don', "don't", 'should', "should've", 'now', 'd', 'll', 'm', 'o', 're', 've', 'y', 'ain', 'aren', 
-"aren't", 'couldn', "couldn't", 'didn', "didn't", 'doesn', "doesn't", 'hadn', "hadn't", 'hasn', "hasn't", 'haven', 
-"haven't", 'isn', "isn't", 'ma', 'mightn', "mightn't", 'mustn', "mustn't", 'needn', "needn't", 'shan', "shan't", 
-'shouldn', "shouldn't", 'wasn', "wasn't", 'weren', "weren't", 'won', "won't", 'wouldn', "wouldn't"]
-'''
 
 def sentiment(sentence):
     sia = SentimentIntensityAnalyzer()
@@ -64,65 +44,47 @@ def sentiment(sentence):
     else:
         return "==Unsatisfactory=="
 
+
 # stopwords from NLTK
 stop_words = stopwords.words('english')# my new custom stopwords
-extra_stop_words = [
-    "'m", "'s", "n't", "'ve",
-    "&", "=",
-    "!", "?", ",", ".", ";", "...", "....", "-", ":",
-    ] # add the new custom stopwrds to my stopwords
-stop_words.extend(extra_stop_words)
-
-# load dict from file with data
-train_file = open("train.pkl", "rb")
-train = pickle.load(train_file)
-
-# Initialize the stemmer
-porter = PorterStemmer()
-lancaster = LancasterStemmer()
-lemmatizer = WordNetLemmatizer()
-
-PORTERSTEMMER = False
-LANCASTERSTEMMER = False
-LEMMATIZATION = True
-AUTOCORRECT = False
 
 correct_words = words.words()
 
-
-def classify(data):
+def classify(data, STOP_WORD_REMOVAL=False, AUTOCORRECT=False):
     classification_list = []
     for text in data:
+        words = word_tokenize(text)
+        if STOP_WORD_REMOVAL:
+            new_words = []
+            for word in words:
+                if word.lower() not in stop_words:
+                    new_words.append(word)
+            words = new_words
+        if AUTOCORRECT:
+            new_words = []
+            for word in words:
+                if word.isalpha():
+                    temp = [(edit_distance(word, w),w) for w in correct_words if w[0]==word[0]]
+                    new_words.append(sorted(temp, key = lambda val:val[0])[0][1])
+                else:
+                    new_words.append(word)
+            words = new_words
+        text = ' '.join(w for w in words)
         classification_list.append((text, sentiment(text)))
     return classification_list
 
 if __name__ == "__main__":
+    # load dict from file with data
+    train_file = open("train.pkl", "rb")
+    train = pickle.load(train_file)
+
     # ========================== #
-    # Remove Stopwords from Text #
-    # ========================== #
+
     for text in train["data"][:6]:
         filtered_list = []
         # Tokenize the sentence
         print(sentiment(text), text)
         words = word_tokenize(text)
-        for word in words:
-            if word.lower() not in stop_words:
-                
-                if AUTOCORRECT:
-                    # temp = [(edit_distance(word, w),w) for w in correct_words if w[0]==word[0]]                
-                    # print(sorted(temp, key = lambda val:val[0])[0][1])  
-                    temp = [(jaccard_distance(set(ngrams(word, 2)),
-                                set(ngrams(w, 2))),w)
-                        for w in correct_words if w[0]==word[0]]
-                    print(sorted(temp, key = lambda val:val[0])[0][1])              
-                if PORTERSTEMMER:
-                    word = porter.stem(word)
-                elif LANCASTERSTEMMER:
-                    word = lancaster.stem(word)
-                elif LEMMATIZATION:
-                    word = lemmatizer.lemmatize(word)
-
-                filtered_list.append(word)
                 
     # print(filtered_list)
 

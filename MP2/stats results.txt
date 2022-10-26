@@ -1,0 +1,212 @@
+===========
+naive_bayes
+===========
+  Correct values per iteration:
+    [501, 455, 449, 465, 457, 457, 476, 451, 467, 436]
+  Average correct classification percentage:
+    46.14%
+  Error stats:
+    Average:
+      -0.06219829186780542
+    Distance occurences:
+      {1: 1680, 2: 525, 3: 217, 4: 127, -2: 634, -4: 107, -3: 216, -1: 1880}
+==========
+rule_based
+==========
+  Correct values per iteration:
+    [278, 297, 309, 287, 311, 285, 292, 312, 287, 278]
+  Average correct classification percentage:
+    29.36%
+  Error stats:
+    Average:
+      -0.33776896942242357
+    Distance occurences:
+      {1: 2178, 2: 669, 3: 52, 4: 5, -2: 1354, -4: 6, -3: 273, -1: 2527}
+=============================
+naive_bayes_and_rule_based0.1
+=============================
+  Correct values per iteration:
+    [501, 455, 449, 465, 457, 457, 476, 451, 467, 436]
+  Average correct classification percentage:
+    46.14%
+  Error stats:
+    Average:
+      -0.06219829186780542
+    Distance occurences:
+      {1: 1680, 2: 525, 3: 217, 4: 127, -2: 634, -4: 107, -3: 216, -1: 1880}
+=============================
+naive_bayes_and_rule_based0.2
+=============================
+  Correct values per iteration:
+    [505, 452, 441, 458, 452, 454, 463, 443, 461, 434]
+  Average correct classification percentage:
+    45.63%
+  Error stats:
+    Average:
+      -0.09895162773588376
+    Distance occurences:
+      {1: 1681, 2: 522, 3: 215, 4: 88, -2: 633, -4: 90, -3: 213, -1: 1995}
+=============================
+naive_bayes_and_rule_based0.3
+=============================
+  Correct values per iteration:
+    [478, 435, 408, 421, 417, 416, 436, 410, 426, 398]
+  Average correct classification percentage:
+    42.45%
+  Error stats:
+    Average:
+      -0.18609904430929627
+    Distance occurences:
+      {1: 1796, 2: 441, 3: 194, 4: 19, -2: 650, -4: 20, -3: 196, -1: 2439}
+=============================
+naive_bayes_and_rule_based0.4
+=============================
+  Correct values per iteration:
+    [478, 435, 408, 421, 417, 418, 435, 410, 426, 398]
+  Average correct classification percentage:
+    42.46%
+  Error stats:
+    Average:
+      -0.18752172401807438
+    Distance occurences:
+      {1: 1797, 2: 441, 3: 192, 4: 19, -2: 653, -4: 20, -3: 196, -1: 2436}
+=============================
+naive_bayes_and_rule_based0.5
+=============================
+  Correct values per iteration:
+    [420, 391, 382, 375, 388, 386, 402, 399, 398, 381]
+  Average correct classification percentage:
+    39.22%
+  Error stats:
+    Average:
+      -0.29516288252714706
+    Distance occurences:
+      {1: 1727, 2: 563, 3: 98, 4: 19, -2: 1020, -4: 20, -3: 133, -1: 2498}
+
+=======================================================================================
+=======================================================================================
+
+=========================
+rule_based_(False, False)
+=========================
+  Correct values per iteration:
+    [281, 304, 301, 285, 313, 290, 289, 307, 287, 276]
+  Average correct classification percentage:
+    29.33%
+  Error stats:
+    Average:
+      -0.33819159473609733
+    Distance occurences:
+      {1: 2182, 2: 664, 3: 52, 4: 5, -2: 1338, -4: 6, -3: 278, -1: 2542}
+========================
+rule_based_(True, False)
+========================
+  Correct values per iteration:
+    [255, 296, 285, 268, 290, 291, 279, 294, 275, 256]
+  Average correct classification percentage:
+    27.89%
+  Error stats:
+    Average:
+      -0.5606711967826931
+    Distance occurences:
+      {1: 1914, 2: 648, 3: 49, 4: 7, -2: 1596, -4: 91, -3: 483, -1: 2423}
+
+=======================================================================================
+=======================================================================================
+
+============================================
+naive_bayes_and_(False, False, False, False)
+============================================
+  Correct values per iteration:
+    [496, 458, 447, 463, 460, 456, 474, 452, 467, 437]
+  Average correct classification percentage:
+    46.10%
+  Error stats:
+    Average:
+      -0.06085343228200371
+    Distance occurences:
+      {1: 1685, 2: 526, 3: 218, 4: 126, -2: 631, -4: 107, -3: 218, -1: 1879}
+===========================================
+naive_bayes_and_(False, True, False, False)
+===========================================
+  Correct values per iteration:
+    [489, 473, 448, 460, 458, 461, 476, 458, 457, 449]
+  Average correct classification percentage:
+    46.29%
+  Error stats:
+    Average:
+      -0.053807484639731895
+    Distance occurences:
+      {1: 1681, 2: 527, 3: 214, 4: 133, -2: 635, -4: 105, -3: 216, -1: 1860}
+===========================================
+naive_bayes_and_(False, False, True, False)
+===========================================
+  Correct values per iteration:
+    [492, 471, 448, 447, 457, 468, 484, 457, 458, 444]
+  Average correct classification percentage:
+    46.26%
+  Error stats:
+    Average:
+      -0.0595459620394492
+    Distance occurences:
+      {1: 1677, 2: 513, 3: 222, 4: 138, -2: 642, -4: 101, -3: 236, -1: 1845}
+===========================================
+naive_bayes_and_(False, False, False, True)
+===========================================
+  Correct values per iteration:
+    [495, 472, 449, 446, 456, 466, 483, 458, 461, 446]
+  Average correct classification percentage:
+    46.32%
+  Error stats:
+    Average:
+      -0.05178837555886736
+    Distance occurences:
+      {1: 1680, 2: 522, 3: 221, 4: 139, -2: 640, -4: 103, -3: 233, -1: 1830}
+===========================================
+naive_bayes_and_(True, False, False, False)
+===========================================
+  Correct values per iteration:
+    [457, 442, 438, 422, 428, 448, 452, 422, 442, 412]
+  Average correct classification percentage:
+    43.63%
+  Error stats:
+    Average:
+      -0.21660457690260776
+    Distance occurences:
+      {1: 1582, 2: 530, 3: 233, 4: 150, -2: 810, -4: 130, -3: 410, -1: 1792}
+==========================================
+naive_bayes_and_(True, True, False, False)
+==========================================
+  Correct values per iteration:
+    [457, 440, 438, 421, 429, 449, 454, 423, 443, 412]
+  Average correct classification percentage:
+    43.66%
+  Error stats:
+    Average:
+      -0.2192048278310259
+    Distance occurences:
+      {1: 1585, 2: 532, 3: 234, 4: 146, -2: 809, -4: 132, -3: 414, -1: 1782}
+==========================================
+naive_bayes_and_(True, False, True, False)
+==========================================
+  Correct values per iteration:
+    [450, 435, 440, 415, 424, 453, 445, 423, 436, 412]
+  Average correct classification percentage:
+    43.33%
+  Error stats:
+    Average:
+      -0.21334039174166225
+    Distance occurences:
+      {1: 1574, 2: 543, 3: 252, 4: 151, -2: 811, -4: 143, -3: 421, -1: 1772}
+==========================================
+naive_bayes_and_(True, False, False, True)
+==========================================
+  Correct values per iteration:
+    [450, 436, 440, 415, 423, 453, 445, 422, 435, 411]
+  Average correct classification percentage:
+    43.30%
+  Error stats:
+    Average:
+      -0.21428571428571427
+    Distance occurences:
+      {1: 1575, 2: 543, 3: 252, 4: 151, -2: 812, -4: 143, -3: 423, -1: 1771}

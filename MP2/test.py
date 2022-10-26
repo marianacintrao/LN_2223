@@ -1,9 +1,10 @@
 import pickle
 import naive_bayes_classifier
-import rule_based_classifier
+#import rule_based_classifier
+import data_prep
 import json
 
-results = {"naive_bayes": [], "rule_based": []}
+results = {}
 data = []
 target = []
 target_names = [
@@ -28,66 +29,91 @@ for i in range(10):
     train_target = [item for sublist in target[:i]+target[i+1:] for item in sublist]
     test_data = data[i]
     test_target = target[i]
-
+    
+    '''
     #########################
     # test with naive bayes #
     #########################
-    predicted_data = naive_bayes_classifier.classify(train_data, train_target, target_names, test_data)
+    if "naive_bayes" not in results.keys():
+        results["naive_bayes"] = []
+    nb_predicted_data = naive_bayes_classifier.classify(train_data, train_target, target_names, test_data)
     iteration_results = {"correct": 0, "incorrect": 0, "incorrect_instances": []}
     print("Comparing predicted and actual data")
-    for j in range(len(predicted_data)):
-        text, category = predicted_data[j]
-        predicted_category_code = test_target[j]
-        predicted_category = target_names[predicted_category_code]
-        if predicted_category != category:
+    for j in range(len(nb_predicted_data)):
+        text, predicted_category = nb_predicted_data[j]
+        target_category_code = test_target[j]
+        target_category = target_names[target_category_code]
+        if predicted_category != target_category:
             iteration_results["incorrect"] += 1
             iteration_results["incorrect_instances"].append({
                 "text": text, 
-                "predicted": category, 
-                "actual": predicted_category, 
-                "error_distance": predicted_category_code - target_names.index(category)})
+                "predicted": predicted_category, 
+                "target": target_category, 
+                "error_distance": target_category_code - target_names.index(predicted_category)})
         else:
             iteration_results["correct"] += 1
 
     results["naive_bayes"].append(iteration_results)
-    ###################
-    # test with rules #
-    ###################
-    predicted_data = rule_based_classifier.classify(test_data)
 
-    iteration_results = {"correct": 0, "incorrect": 0, "incorrect_instances": []}
-    print("Comparing predicted and actual data")
-    for j in range(len(predicted_data)):
-        text, category = predicted_data[j]
-        predicted_category_code = test_target[j]
-        predicted_category = target_names[predicted_category_code]
-        if predicted_category != category:
-            iteration_results["incorrect"] += 1
-            iteration_results["incorrect_instances"].append({
-                "text": text, 
-                "predicted": category, 
-                "actual": predicted_category, 
-                "error_distance": predicted_category_code - target_names.index(category)})
-        else:
-            iteration_results["correct"] += 1
-
-    results["rule_based"].append(iteration_results)
+    '''
+    ############################################
+    # test with naive bayes and pre processing #
+    ############################################
     
+    # def transform_data(data, REMOVE_STOPWORDS=False, PORTERSTEMMER=False, 
+    #                          LANCASTERSTEMMER=False, LEMMATIZATION=False):
+
+    for args in ( 
+        (False, False, False, False), (False, True, False, False), 
+        (False, False, True, False), (False, False, False, True),
+        (True, False, False, False), (True, True, False, False), 
+        (True, False, True, False), (True, False, False, True),
+        ):
+        iteration_results = {"correct": 0, "incorrect": 0, "incorrect_instances": []}
+        strategy_name = "naive_bayes_and_"+str(args)
+        if strategy_name not in results.keys():
+            results[strategy_name] = []
+
+        train_data = data_prep.transform_data(train_data, *args)
+        test_data = data_prep.transform_data(test_data, *args)
+
+        nb_predicted_data = naive_bayes_classifier.classify(train_data, train_target, target_names, test_data)
+        iteration_results = {"correct": 0, "incorrect": 0, "incorrect_instances": []}
+        print("Comparing predicted and actual data")
+        for j in range(len(nb_predicted_data)):
+            text, predicted_category = nb_predicted_data[j]
+            target_category_code = test_target[j]
+            target_category = target_names[target_category_code]
+            if predicted_category != target_category:
+                iteration_results["incorrect"] += 1
+                iteration_results["incorrect_instances"].append({
+                    "text": text, 
+                    "predicted": predicted_category, 
+                    "target": target_category, 
+                    "error_distance": target_category_code - target_names.index(predicted_category)})
+            else:
+                iteration_results["correct"] += 1
+
+        results[strategy_name].append(iteration_results)
+    
+
     #####################
     # other tests: TODO #
     #####################
 
-    
-    print("Printing results to file")
-    jsondump = json.dumps(results, indent=4)
-    # Writing to results.json
-    with open("results.json", "w") as outfile:
-        outfile.write(jsondump)
+
+
+print("Printing results to file")
+jsondump = json.dumps(results, indent=4)
+# Writing to results.json
+with open("results.json", "w") as outfile:
+    outfile.write(jsondump)
 
 
 
 print("Getting stats!")
 for key in results.keys():
+
     print("="*len(key), "\n"+key, "\n"+"="*len(key))
     print("  Correct values per iteration:")
     print("   ", [iteration_results["correct"] for iteration_results in results[key]])
