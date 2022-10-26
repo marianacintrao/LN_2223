@@ -1,7 +1,8 @@
 import pickle
-import naive_bayes_classifier
-#import rule_based_classifier
 import data_prep
+import naive_bayes_classifier
+import support_vector_machines_classifier
+#import rule_based_classifier
 import json
 
 results = {}
@@ -30,32 +31,41 @@ for i in range(10):
     test_data = data[i]
     test_target = target[i]
     
-    '''
-    #########################
-    # test with naive bayes #
-    #########################
-    if "naive_bayes" not in results.keys():
-        results["naive_bayes"] = []
-    nb_predicted_data = naive_bayes_classifier.classify(train_data, train_target, target_names, test_data)
-    iteration_results = {"correct": 0, "incorrect": 0, "incorrect_instances": []}
-    print("Comparing predicted and actual data")
-    for j in range(len(nb_predicted_data)):
-        text, predicted_category = nb_predicted_data[j]
-        target_category_code = test_target[j]
-        target_category = target_names[target_category_code]
-        if predicted_category != target_category:
-            iteration_results["incorrect"] += 1
-            iteration_results["incorrect_instances"].append({
-                "text": text, 
-                "predicted": predicted_category, 
-                "target": target_category, 
-                "error_distance": target_category_code - target_names.index(predicted_category)})
-        else:
-            iteration_results["correct"] += 1
+    
+    ################################
+    # test support vector machines #
+    ################################
+    for args in ( 
+        (True, False), (False, True),
+        ):
+        iteration_results = {"correct": 0, "incorrect": 0, "incorrect_instances": []}
+        strategy_name = "support_vector_machines_"+str(args)
+        if strategy_name not in results.keys():
+            results[strategy_name] = []
 
-    results["naive_bayes"].append(iteration_results)
+        #train_data = data_prep.transform_data(train_data, *args)
+        #test_data = data_prep.transform_data(test_data, *args)
 
-    '''
+        predicted_data = support_vector_machines_classifier.classify(train_data, train_target, target_names, test_data, *args)
+        iteration_results = {"correct": 0, "incorrect": 0, "incorrect_instances": []}
+        print("Comparing predicted and actual data")
+        for j in range(len(predicted_data)):
+            text, predicted_category = predicted_data[j]
+            target_category_code = test_target[j]
+            target_category = target_names[target_category_code]
+            if predicted_category != target_category:
+                iteration_results["incorrect"] += 1
+                iteration_results["incorrect_instances"].append({
+                    "text": text, 
+                    "predicted": predicted_category, 
+                    "target": target_category, 
+                    "error_distance": target_category_code - target_names.index(predicted_category)})
+            else:
+                iteration_results["correct"] += 1
+
+        results[strategy_name].append(iteration_results)
+
+    
     ############################################
     # test with naive bayes and pre processing #
     ############################################
@@ -130,9 +140,3 @@ for key in results.keys():
     for dist in dist_set:
         dist_occ[dist] = distances.count(dist)
     print("    Distance occurences:","\n     ",  dist_occ)
-    #print("    Problematic sentences: ")
-    problematic_items = {}
-    #for item in items:
-        #if abs(item["error_distance"]) > 3:
-        #    print("     ", item["text"], "|| pred:", item["predicted"], "|| actual:", item["actual"])
-    

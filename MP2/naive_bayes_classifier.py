@@ -10,6 +10,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 import pickle
+from nltk import ngrams
+
 
 def classify(train_data, target, target_names, test_data):
     # Create dictionary and transform to feature vectors.
