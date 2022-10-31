@@ -9,11 +9,11 @@ results = {}
 data = []
 target = []
 target_names = [
-    "==Poor==", 
-    "==Unsatisfactory==", 
-    "==Good==", 
-    "==VeryGood==", 
-    "==Excellent=="
+    "=Poor=", 
+    "=Unsatisfactory=", 
+    "=Good=", 
+    "=VeryGood=", 
+    "=Excellent="
     ]
 
 for i in range(10):
@@ -88,7 +88,10 @@ for i in range(10):
         test_data = data_prep.transform_data(test_data, *args)
 
         nb_predicted_data = naive_bayes_classifier.classify(train_data, train_target, target_names, test_data)
-        iteration_results = {"correct": 0, "incorrect": 0, "incorrect_instances": []}
+        iteration_results = {"correct": 0, "incorrect": 0, "incorrect_instances": [],
+         "true_positives":{"=Poor=": 0, "=Unsatisfactory=": 0, "=Good=": 0, "=VeryGood=": 0, "=Excellent=": 0},
+        "false_negatives":{"=Poor=": 0, "=Unsatisfactory=": 0, "=Good=": 0, "=VeryGood=": 0, "=Excellent=": 0},
+         "false_positives":{"=Poor=": 0, "=Unsatisfactory=": 0, "=Good=": 0, "=VeryGood=": 0, "=Excellent=": 0}}
         print("Comparing predicted and actual data")
         for j in range(len(nb_predicted_data)):
             text, predicted_category = nb_predicted_data[j]
@@ -96,6 +99,8 @@ for i in range(10):
             target_category = target_names[target_category_code]
             if predicted_category != target_category:
                 iteration_results["incorrect"] += 1
+                iteration_results["false_negatives"][target_category] += 1
+                iteration_results["false_positives"][predicted_category] += 1
                 iteration_results["incorrect_instances"].append({
                     "text": text, 
                     "predicted": predicted_category, 
@@ -103,6 +108,7 @@ for i in range(10):
                     "error_distance": target_category_code - target_names.index(predicted_category)})
             else:
                 iteration_results["correct"] += 1
+                iteration_results["true_positives"][predicted_category] += 1
 
         results[strategy_name].append(iteration_results)
     
@@ -126,6 +132,10 @@ for key in results.keys():
 
     print("="*len(key), "\n"+key, "\n"+"="*len(key))
     print("  Correct values per iteration:")
+    for i in iteration_results["true_positives"]:
+        precision = iteration_results["true_positives"][i] / (iteration_results["true_positives"][i] + iteration_results["false_positives"][i]) 
+        recall = iteration_results["true_positives"][i] / (iteration_results["true_positives"][i] + iteration_results["false_negatives"][i]) 
+        print(i, "in terms of precision ", precision, "and recall ", recall)
     print("   ", [iteration_results["correct"] for iteration_results in results[key]])
     average_correct_percentage = sum([iteration_results["correct"] for iteration_results in results[key]]) / (1000*10)
     print(" ", "Average correct classification percentage:", "\n    {0:.2%}".format(average_correct_percentage))
