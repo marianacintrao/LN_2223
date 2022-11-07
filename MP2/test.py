@@ -32,45 +32,6 @@ for i in range(10):
     test_target = target[i]
     
     
-    ################################
-    # test support vector machines #
-    ################################
-    for args in ( 
-        (True, False), (False, True),
-        ):
-        iteration_results = {"correct": 0, "incorrect": 0, "incorrect_instances": []}
-        strategy_name = "support_vector_machines_"+str(args)
-        if strategy_name not in results.keys():
-            results[strategy_name] = []
-
-        #train_data = data_prep.transform_data(train_data, *args)
-        #test_data = data_prep.transform_data(test_data, *args)
-
-        predicted_data = support_vector_machines_classifier.classify(train_data, train_target, target_names, test_data, *args)
-        iteration_results = {"correct": 0, "incorrect": 0, "incorrect_instances": [],
-        "true_positives":{"=Poor=": 0, "=Unsatisfactory=": 0, "=Good=": 0, "=VeryGood=": 0, "=Excellent=": 0},
-        "false_negatives":{"=Poor=": 0, "=Unsatisfactory=": 0, "=Good=": 0, "=VeryGood=": 0, "=Excellent=": 0},
-        "false_positives":{"=Poor=": 0, "=Unsatisfactory=": 0, "=Good=": 0, "=VeryGood=": 0, "=Excellent=": 0}}
-        print("Comparing predicted and actual data")
-        for j in range(len(predicted_data)):
-            text, predicted_category = predicted_data[j]
-            target_category_code = test_target[j]
-            target_category = target_names[target_category_code]
-            if predicted_category != target_category:
-                iteration_results["incorrect"] += 1
-                iteration_results["false_negatives"][target_category] += 1
-                iteration_results["false_positives"][predicted_category] += 1
-                iteration_results["incorrect_instances"].append({
-                    "text": text, 
-                    "predicted": predicted_category, 
-                    "target": target_category, 
-                    "error_distance": target_category_code - target_names.index(predicted_category)})
-            else:
-                iteration_results["correct"] += 1
-                iteration_results["true_positives"][predicted_category] += 1
-
-        results[strategy_name].append(iteration_results)
-
     
     ############################################
     # test with naive bayes and pre processing #

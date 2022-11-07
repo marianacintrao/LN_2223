@@ -18,7 +18,6 @@ porter = PorterStemmer()
 lancaster = LancasterStemmer()
 lemmatizer = WordNetLemmatizer()
 
-
 stop_words = stopwords.words('english')
 correct_words = words.words()
 
@@ -49,25 +48,19 @@ def transform_data(data, REMOVE_STOPWORDS=False, PORTERSTEMMER=False, LANCASTERS
     return new_data
 
 def classify(train_data, target, target_names, test_data):
-    # Create dictionary and transform to feature vectors.
     count_vector = CountVectorizer()
     X_train_counts = count_vector.fit_transform(train_data)
 
-    # TF-IDF vectorize.
     tfidf_transformer = TfidfTransformer()
     X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
 
-    # Create model(naive bayes) and training. 
     clf = MultinomialNB().fit(X_train_tfidf, target)
     
-    # Create test documents and vectorize.
     X_new_counts = count_vector.transform(test_data)
     X_new_tfidf = tfidf_transformer.transform(X_new_counts)
 
-    # Execute prediction(classification).
     predicted = clf.predict(X_new_tfidf)
 
-    # Print predicted data.
     predicted_data = []
     for text, category in zip(test_data, predicted):
         predicted_data.append((text, target_names[category]))
@@ -84,7 +77,6 @@ if __name__ == '__main__':
     Lines = file.readlines()
     for line in Lines:
         target_name, text = re.split('\t', line, maxsplit=1)
-        #text = text[:-4] # removing '\t\t\t\n' from line ends
         train_data.append(text)
         target = target_names.index(target_name)
         targets.append(target)

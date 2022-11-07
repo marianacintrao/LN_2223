@@ -31,3 +31,9 @@ print("\n", "=" * 20)
 for i in range(len(data)):
     if not any(c.isalpha() for c in data[i]):
         print(data[i], target_names[target[i]])
+
+print("=Poor=", target.count(0))
+print("=Unsatisfactory=", target.count(1))
+print("=Good=", target.count(2))
+print("=VeryGood=", target.count(3))
+print("=Excellent=", target.count(4))
